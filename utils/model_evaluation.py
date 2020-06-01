@@ -3,10 +3,12 @@ from os import path
 from pathlib import Path
 
 import matplotlib.pyplot as plt
-import torch
-from sklearn.metrics import accuracy_score, confusion_matrix
 import numpy as np
-from utils.config import RESULTS_DIR
+import torch
+from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix
+import seaborn as sn
+
+from utils.config import RESULTS_DIR, ARTIFACTS_DIR
 
 
 class ModelEvaluator:
@@ -33,9 +35,16 @@ class ModelEvaluator:
             return confusion_matrix(self.y_real, self.y_pred).astype(int)
         return None
 
-    def display_confusion_matrix(self, save_plot=None):
-        if self.y_pred is not None:
-            print(self.get_confusion_matrix())
+    def display_confusion_matrix(self, save_plot=None, show=True):
+        plt.figure()
+        sn.heatmap(self.get_confusion_matrix(), annot=True, fmt='g')
+        plt.xlabel("Predicted Label")
+        plt.ylabel("True Label")
+        plt.title("Confusion matrix")
+        if save_plot is not None:
+            plt.savefig(save_plot)
+        if show:
+            plt.show()
 
     def show_training_accuracy_epoch(self, figname=None, show=True):
         train_acc = self.model.history[:, 'train_acc'][1:]
@@ -50,7 +59,6 @@ class ModelEvaluator:
         plt.ylim([0.0, 1.0])
         plt.xlabel('Epoch')
         plt.ylabel('Accuracy')
-        plt.savefig('Train-Val-loss-1.png')
         if show:
             plt.show()
         if figname is not None:
@@ -66,7 +74,6 @@ class ModelEvaluator:
         plt.legend()
         plt.xlabel('Epoch')
         plt.ylabel('Loss')
-        plt.savefig('Train-Val-loss-1.png')
         if show:
             plt.show()
         if figname is not None:
@@ -79,6 +86,9 @@ class ModelEvaluator:
         if self.y_pred is not None:
             self.show_training_accuracy_epoch(figname=os.path.join(save_dir, "accuracy_epoch.png"), show=False)
             self.show_training_loss_epoch(figname=os.path.join(save_dir, "loss_epoch.png"), show=False)
-            np.savetxt(os.path.join(save_dir, "confusion_matrix.csv"), self.get_confusion_matrix(), delimiter=",", fmt='%d')
+            self.display_confusion_matrix(save_plot=os.path.join(save_dir, "confusion_matrix.png"), show=False)
+            np.savetxt(os.path.join(save_dir, "confusion_matrix.csv"), self.get_confusion_matrix(), delimiter=",",
+                       fmt='%d')
+            torch.save(self.model.module_.state_dict(), os.path.join(ARTIFACTS_DIR, name + ".pt"))
         else:
             print(f"Could not save results. Please train the {self.__name__} first")
