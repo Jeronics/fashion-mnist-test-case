@@ -4,6 +4,7 @@ from copy import copy
 
 import numpy as np
 import torch
+from sklearn.model_selection import train_test_split
 from sklearn.metrics import accuracy_score
 from skorch.callbacks import BatchScoring
 from skorch.callbacks import Callback
@@ -11,6 +12,7 @@ from skorch.dataset import CVSplit
 from torch.utils.data import Subset
 from utils.config import ARTIFACTS_DIR
 from os import path
+from utils.model_evaluation import ModelEvaluator
 
 class GridSearchCV:
     '''
@@ -37,6 +39,7 @@ class GridSearchCV:
         for k in range(self.cv):
             train_idxs, val_idxs = self.split_list_fold(len(dataset), cv=self.cv, fold=k)
             train, val = Subset(dataset, train_idxs), Subset(dataset_copy, val_idxs)
+
             # For each Parameter
             valid_scores_per_fold = []
             train_scores_per_fold = []
@@ -47,14 +50,15 @@ class GridSearchCV:
                 # fit on the training set
                 self.model.fit(train, None)
 
-                # evaluate on the validation set
-                y_pred_train = self.model.predict(train)
-                train_accuracy = accuracy_score(dataset.targets[train_idxs], y_pred_train)
-                train_scores_per_fold.append(train_accuracy)
+                model_evaluator = ModelEvaluator(self.model)
 
-                y_pred = self.model.predict(val)
-                accuracy = accuracy_score(dataset.targets[val_idxs], y_pred)
-                valid_scores_per_fold.append(accuracy)
+                # evaluate on the validation set
+                model_evaluator.fit(train)
+                train_scores_per_fold.append(model_evaluator.get_accuracy())
+
+                # evaluate on the validation set
+                model_evaluator.fit(val)
+                valid_scores_per_fold.append(model_evaluator.get_accuracy())
 
             param_valid_scores.append(valid_scores_per_fold)
             param_train_scores.append(train_scores_per_fold)
