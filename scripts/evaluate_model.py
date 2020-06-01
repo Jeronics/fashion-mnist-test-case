@@ -1,18 +1,18 @@
 import pickle
-from utils.model_evaluation import ModelEvaluator
-from torchvision.datasets import FashionMNIST
-import torchvision.transforms as transforms
-from utils.data_loaders import CustomFashionMNIST
-from skorch.callbacks import BatchScoring
-from skorch.dataset import CVSplit
-from torch.utils.data import DataLoader
 from os import path
-from utils.config import ARTIFACTS_DIR, DATA_DIR, RESULTS_DIR
-if __name__ == '__main__':
 
-    model_name = 'cnn_3'
+import torchvision.transforms as transforms
+from torch.utils.data import DataLoader
+
+from utils.config import ARTIFACTS_DIR, DATA_DIR
+from utils.data_loaders import CustomFashionMNIST
+from utils.model_evaluation import ModelEvaluator
+
+if __name__ == '__main__':
+    model_name = 'cnn_1'
+
     # loading
-    with open(path.join(ARTIFACTS_DIR, model_name+'.pkl'), 'rb') as f:
+    with open(path.join(ARTIFACTS_DIR, model_name + '.pkl'), 'rb') as f:
         cvGridSearch = pickle.load(f)
 
     # Define the transformations applied to the training data
@@ -27,4 +27,6 @@ if __name__ == '__main__':
     modelEvaluator.fit(testset)
     print(modelEvaluator.get_accuracy())
     print(modelEvaluator.get_confusion_matrix())
-    modelEvaluator.save_results(cvGridSearch.name)
+    modelEvaluator.save_results(model_name)
+    print(cvGridSearch.best_params_)
+    print(cvGridSearch.best_model.module_)
