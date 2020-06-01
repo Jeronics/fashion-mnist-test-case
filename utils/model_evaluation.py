@@ -30,7 +30,7 @@ class ModelEvaluator:
 
     def get_confusion_matrix(self):
         if self.y_pred is not None:
-            return confusion_matrix(self.y_real, self.y_pred)
+            return confusion_matrix(self.y_real, self.y_pred).astype(int)
         return None
 
     def display_confusion_matrix(self, save_plot=None):
@@ -79,6 +79,6 @@ class ModelEvaluator:
         if self.y_pred is not None:
             self.show_training_accuracy_epoch(figname=os.path.join(save_dir, "accuracy_epoch.png"), show=False)
             self.show_training_loss_epoch(figname=os.path.join(save_dir, "loss_epoch.png"), show=False)
-            np.savetxt("foo.csv", self.get_confusion_matrix(), delimiter=",")
+            np.savetxt(os.path.join(save_dir, "confusion_matrix.csv"), self.get_confusion_matrix(), delimiter=",", fmt='%d')
         else:
             print(f"Could not save results. Please train the {self.__name__} first")
