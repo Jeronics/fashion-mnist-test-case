@@ -1,10 +1,11 @@
 from copy import copy
 
 import torch
-import torchvision.transforms as transforms
 from skorch import NeuralNetClassifier
 from skorch.dataset import CVSplit
 from torch.utils.data import Subset
+from torchvision.transforms import Compose, ToTensor, Normalize
+
 from utils.config import MEAN_PIXEL, STD_PIXEL
 
 
@@ -23,9 +24,9 @@ class CustomNeuralNetClassifier(NeuralNetClassifier):
                          classes=classes, **kwargs)
 
         if valid_transform is None:
-            self.valid_transform = default_transformation = transforms.Compose([
-                transforms.ToTensor(),
-                transforms.Normalize((MEAN_PIXEL,), (STD_PIXEL,))
+            self.valid_transform = Compose([
+                ToTensor(),
+                Normalize((MEAN_PIXEL,), (STD_PIXEL,))
             ])
         else:
             self.valid_transform = valid_transform
