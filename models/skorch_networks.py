@@ -16,7 +16,7 @@ class CustomNeuralNetClassifier(NeuralNetClassifier):
             *args,
             valid_transform=None,
             criterion=torch.nn.CrossEntropyLoss,
-            train_split=CVSplit(5, stratified=True),
+            train_split=CVSplit(5, stratified=False),
             classes=None,
             **kwargs):
         super().__init__(module, *args, criterion=criterion, train_split=train_split,
