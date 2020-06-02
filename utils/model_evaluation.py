@@ -8,7 +8,7 @@ import torch
 from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix
 import seaborn as sn
 
-from utils.config import RESULTS_DIR, ARTIFACTS_DIR
+from utils.config import RESULTS_DIR, ARTIFACTS_DIR, LIST_CLASS
 
 
 class ModelEvaluator:
@@ -41,6 +41,12 @@ class ModelEvaluator:
         plt.xlabel("Predicted Label")
         plt.ylabel("True Label")
         plt.title("Confusion matrix")
+        plt.tick_params(axis='both', labelsize=0, length = 0)
+        plt.xticks(range(len(LIST_CLASS)), list(LIST_CLASS), size='small')
+        plt.yticks(np.array(range(len(LIST_CLASS)))+0.5, list(LIST_CLASS), size='small')
+        plt.xticks(rotation=45)
+        plt.yticks(rotation=0)
+        plt.tight_layout()
         if save_plot is not None:
             plt.savefig(save_plot)
         if show:
@@ -57,8 +63,10 @@ class ModelEvaluator:
         plt.plot(range(1, len(valid_acc) + 1), valid_acc, 'r', label='Validation Accuracy')
         plt.legend()
         plt.ylim([0.0, 1.0])
+        plt.yticks(np.arange(0.0, 1.0, 0.1))
         plt.xlabel('Epoch')
         plt.ylabel('Accuracy')
+        plt.title('Accuracy per epoch')
         if show:
             plt.show()
         if figname is not None:
@@ -70,10 +78,12 @@ class ModelEvaluator:
         plt.figure()
         plt.plot(range(1, len(train_loss) + 1), train_loss, 'b', label='Training Loss')
         plt.plot(range(1, len(valid_loss) + 1), valid_loss, 'r', label='Validation Loss')
-        plt.ylim([0.0, 1.0])
+        # plt.ylim([0.0, 1.0])
+        # plt.yticks(np.arange(0.0, 1.0, 0.05))
         plt.legend()
         plt.xlabel('Epoch')
         plt.ylabel('Loss')
+        plt.title('Loss per epoch')
         if show:
             plt.show()
         if figname is not None:
@@ -84,11 +94,12 @@ class ModelEvaluator:
         Path(save_dir).mkdir(parents=True, exist_ok=True)
         print(path.exists(save_dir))
         if self.y_pred is not None:
-            self.show_training_accuracy_epoch(figname=os.path.join(save_dir, "accuracy_epoch.png"), show=False)
-            self.show_training_loss_epoch(figname=os.path.join(save_dir, "loss_epoch.png"), show=False)
+            if self.model is not None:
+                self.show_training_accuracy_epoch(figname=os.path.join(save_dir, "accuracy_epoch.png"), show=False)
+                self.show_training_loss_epoch(figname=os.path.join(save_dir, "loss_epoch.png"), show=False)
+                torch.save(self.model.module_.state_dict(), os.path.join(ARTIFACTS_DIR, name + ".pt"))
             self.display_confusion_matrix(save_plot=os.path.join(save_dir, "confusion_matrix.png"), show=False)
             np.savetxt(os.path.join(save_dir, "confusion_matrix.csv"), self.get_confusion_matrix(), delimiter=",",
                        fmt='%d')
-            torch.save(self.model.module_.state_dict(), os.path.join(ARTIFACTS_DIR, name + ".pt"))
         else:
             print(f"Could not save results. Please train the {self.__name__} first")
