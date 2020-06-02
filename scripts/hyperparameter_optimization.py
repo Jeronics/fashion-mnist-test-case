@@ -4,8 +4,8 @@ from skorch.helper import predefined_split
 from torch.utils.data import random_split
 
 import sys
-from models.networks import CNN2
-import  torchvision.transforms as transforms
+from models.networks import CNN2, CNN
+import torchvision.transforms as transforms
 from models.skorch_networks import CustomNeuralNetClassifier
 from utils.config import MEAN_PIXEL, STD_PIXEL, DATA_DIR
 from utils.data_loaders import CustomFashionMNIST
@@ -13,6 +13,20 @@ from utils.model_evaluation import ModelEvaluator
 from utils.model_selection import GridSearchCV
 
 if __name__ == '__main__':
+    ## Variables to change
+    # Where you wish the model to be stored in the artifacts folder.
+    model_name = "cnn_1_500"
+    # Data augmentation on the training dataset or not.
+    data_augmentation = False
+    # CNN or CNN2 networks.
+    Network = CNN
+    # Apply hyperparameter search or just train.
+    hyperparameter_search = False
+    # Dictionary with list of values per hyperparameter for grid search.
+    params_options = {
+        'lr': [0.001],
+    }
+
     torch.manual_seed(0)
     # Define the transformations applied to the training data
     vertical_flip = transforms.Compose([
@@ -25,47 +39,47 @@ if __name__ == '__main__':
         transforms.ToTensor(),
         transforms.Normalize((MEAN_PIXEL,), (STD_PIXEL,))
     ])
-
-    # transformations = {
-    #     "default": default_transformation,
-    #     "train": {
-    #         0: vertical_flip,
-    #         1: vertical_flip,
-    #         2: vertical_flip,
-    #         3: vertical_flip,
-    #         4: vertical_flip,
-    #         5: default_transformation,
-    #         6: vertical_flip,
-    #         7: default_transformation,
-    #         8: vertical_flip,
-    #         9: default_transformation,
-    #     }
-    # }
-    transformations = {
-        "default": default_transformation,
-        "train": default_transformation,
-    }
+    if data_augmentation:
+        transformations = {
+            "default": default_transformation,
+            "train": {
+                0: vertical_flip,
+                1: vertical_flip,
+                2: vertical_flip,
+                3: vertical_flip,
+                4: vertical_flip,
+                5: default_transformation,
+                6: vertical_flip,
+                7: default_transformation,
+                8: vertical_flip,
+                9: default_transformation,
+            }
+        }
+    else:
+        transformations = {
+            "default": default_transformation,
+            "train": default_transformation,
+        }
 
     trainset = CustomFashionMNIST(DATA_DIR, download=True, train=True, transform=transformations['train'])
     testset = CustomFashionMNIST(DATA_DIR, download=True, train=False, transform=transformations['default'])
 
-    params_options = {
-        'lr': [0.001],
-    }
 
-    net = CustomNeuralNetClassifier(CNN2,
-                                    max_epochs=1000,
+    net = CustomNeuralNetClassifier(Network,
+                                    max_epochs=500,
                                     lr=0.001,
                                     criterion=torch.nn.CrossEntropyLoss,
-                                    optimizer__weight_decay=0.01,
                                     # Shuffle training data on each epoch
                                     iterator_train__shuffle=False,
                                     valid_transform=default_transformation,
                                     )
 
-    cvGridSearch = GridSearchCV(net, params_options, cv=3, refit=True, name="cnn_2_1000", transformation=transformations)
+    cvGridSearch = GridSearchCV(net, params_options, cv=3, refit=True, name=model_name, transformation=transformations)
 
-    cvGridSearch.final_fit(trainset)
+    if hyperparameter_search:
+        cvGridSearch.fit(trainset)
+    else:
+        cvGridSearch.final_fit(trainset)
 
     y_pred = cvGridSearch.predict(testset)
 
