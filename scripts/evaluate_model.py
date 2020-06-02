@@ -2,7 +2,6 @@ import pickle
 from os import path
 
 import torchvision.transforms as transforms
-from torch.utils.data import DataLoader
 
 from utils.config import ARTIFACTS_DIR, DATA_DIR, MEAN_PIXEL, STD_PIXEL
 from utils.data_loaders import CustomFashionMNIST

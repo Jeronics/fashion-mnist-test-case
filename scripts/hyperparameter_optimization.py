@@ -5,7 +5,7 @@ from torch.utils.data import random_split
 
 import sys
 from models.networks import CNN2
-from torchvision.transforms import Compose, ToTensor, Normalize, RandomHorizontalFlip
+import  torchvision.transforms as transforms
 from models.skorch_networks import CustomNeuralNetClassifier
 from utils.config import MEAN_PIXEL, STD_PIXEL, DATA_DIR
 from utils.data_loaders import CustomFashionMNIST
@@ -15,15 +15,15 @@ from utils.model_selection import GridSearchCV
 if __name__ == '__main__':
     torch.manual_seed(0)
     # Define the transformations applied to the training data
-    vertical_flip = Compose([
-        RandomHorizontalFlip(),
-        ToTensor(),
-        Normalize((MEAN_PIXEL,), (STD_PIXEL,))
+    vertical_flip = transforms.Compose([
+        transforms.RandomHorizontalFlip(),
+        transforms.ToTensor(),
+        transforms.Normalize((MEAN_PIXEL,), (STD_PIXEL,))
     ])
 
-    default_transformation = Compose([
-        ToTensor(),
-        Normalize((MEAN_PIXEL,), (STD_PIXEL,))
+    default_transformation = transforms.Compose([
+        transforms.ToTensor(),
+        transforms.Normalize((MEAN_PIXEL,), (STD_PIXEL,))
     ])
 
     # transformations = {
@@ -54,16 +54,16 @@ if __name__ == '__main__':
     }
 
     net = CustomNeuralNetClassifier(CNN2,
-                                    max_epochs=500,
+                                    max_epochs=1000,
                                     lr=0.001,
                                     criterion=torch.nn.CrossEntropyLoss,
                                     optimizer__weight_decay=0.01,
                                     # Shuffle training data on each epoch
-                                    iterator_train__shuffle=True,
+                                    iterator_train__shuffle=False,
                                     valid_transform=default_transformation,
                                     )
 
-    cvGridSearch = GridSearchCV(net, params_options, cv=3, refit=True, name="cnn_2", transformation=transformations)
+    cvGridSearch = GridSearchCV(net, params_options, cv=3, refit=True, name="cnn_2_1000", transformation=transformations)
 
     cvGridSearch.final_fit(trainset)
 

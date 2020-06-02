@@ -2,7 +2,6 @@ import pickle
 from os import path
 
 import cv2
-import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torchvision.transforms as transforms
@@ -36,7 +35,7 @@ def join_images(dataset, image_name):
     if imgs_comb.mode != 'RGB':
         imgs_comb_save = imgs_comb.convert('RGB')
 
-    imgs_comb_save.save('Trifecta_vertical.jpg')
+    imgs_comb_save.save('joined_image.jpg')
     return imgs_comb
 
 
@@ -98,10 +97,6 @@ if __name__ == "__main__":
         _, score_map_for_contours = cv2.threshold(score_map, np.percentile(score_map, 10), 1.0, type=cv2.THRESH_BINARY)
         score_map_for_contours = score_map_for_contours.astype(np.uint8).copy()
 
-        # plt.figure()
-        # plt.imshow(score_map_for_contours, 'gray')
-        # plt.show()
-
         # Find the countour of the binary blob
         contours, _ = cv2.findContours(score_map_for_contours, mode=cv2.RETR_EXTERNAL, method=cv2.CHAIN_APPROX_SIMPLE)
 
@@ -120,7 +115,6 @@ if __name__ == "__main__":
             # Display bounding box
             cv2.rectangle(masked_image, rect[:2], (rect[0] + rect[2], rect[1] + rect[3]), (255, 255, 255), 2)
             cv2.rectangle(pil_image, rect[:2], (rect[0] + rect[2], rect[1] + rect[3]), (255, 255, 255), 2)
-            # cv2.rectangle(masked_image, rect[:2], (rect[1] + rect[3], rect[1] + rect[2]), (255, 255, 255), 2)
 
         # Display images
         cv2.imshow("Original Image", pil_image)
