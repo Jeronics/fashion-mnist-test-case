@@ -1,4 +1,4 @@
-# Advertima test case
+# FashionMNIST test case
 FashionMNIST classification and object detection.
 
 ## 0. Setup
