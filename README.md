@@ -1,6 +1,13 @@
 # advertima-test-case
 
-### 1. Training and Hyperparameter tuning 
+## 0. Setup
+
+To install all dependencies, run in the console:
+
+```pip install -r requirements.txt```
+
+
+## 1. Training and Hyperparameter tuning 
 
 To train or tune a model. Run the ```hyperparameter_optimization``` script.
 Before you do so, apply the following changes:
@@ -14,7 +21,7 @@ data_augmentation = False
 Network = CNN
 # Apply hyperparameter search or just train.
 hyperparameter_search = False
-# Dictionary with list of values per hyperparameter for grid search.
+# Dictionary with list of values per hyperparaeter for grid search.
 params_options = {   
     'lr': [0.001],
 }
@@ -33,7 +40,7 @@ In order to run, change the model_name to fit with one of the existing pkl. file
 
 ```python -m scripts.evaluate_model.py```
 
-3. Application
+## 3. Application
 
 Run the application consists in applying the previous object detection to a live feed. To do this, I used openCV's library to capture the images. Unfortunately, this part was not completely finished because of the lack of time.
 To run the code:
