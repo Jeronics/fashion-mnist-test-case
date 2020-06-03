@@ -7,8 +7,11 @@ This program runs on python 3.7. To install all dependencies, run the following 
 
 ```pip install -r requirements.txt```
 
+## 1. Report
 
-## 1. Training and Hyperparameter tuning 
+The report can be found in the ```notebooks/test_case_report.ipynb``` notebook, which contains a full report about the project, the approaches, the result and the app.
+
+## 2. Training and Hyperparameter tuning 
 
 To train or tune a model, run the ```hyperparameter_optimization``` script.
 Before you do so, tweak the following variables in the script:
@@ -35,7 +38,7 @@ and run:
 
 This script will save the model as a pickle in the artifacts folder.
 
-## 2. Evaluation
+## 3. Evaluation
 
 Once the model has been trained, The ```evaluate_model.py``` script will be used to extract results of the classifier such as plots and metrics.
 
@@ -43,7 +46,7 @@ In order to run, change the model_name to fit with one of the existing pkl. file
 
 ```python -m scripts.evaluate_model```
 
-## 3. Application
+## 4. Application
 
 Run the application consists in applying the previous object detection to a live feed. To do this, I used openCV's library to capture the images. Unfortunately, this part was not completely finished because of the lack of time.
 To run the code:
