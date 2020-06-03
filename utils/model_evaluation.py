@@ -1,6 +1,7 @@
 import os
 from os import path
 from pathlib import Path
+import time
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -17,13 +18,17 @@ class ModelEvaluator:
         self.model = model
         self.y_real = None
         self.y_pred = None
+        self.duration = None
 
     def fit(self, testset):
         if isinstance(testset, torch.utils.data.Subset):
             self.y_real = testset.dataset.targets[testset.indices]
         else:
             self.y_real = testset.targets
+        start_time = time.time()
         self.y_pred = self.model.predict(testset)
+        self.duration = (time.time() - start_time)/len(testset)
+        print("time", self.duration)
 
     def get_accuracy(self):
         if self.y_pred is not None:
@@ -55,6 +60,7 @@ class ModelEvaluator:
     def show_training_accuracy_epoch(self, figname=None, show=True):
         train_acc = self.model.history[:, 'train_acc'][1:]
         valid_acc = self.model.history[:, 'valid_acc'][:-1]
+        print("accuracies",train_acc[-1],valid_acc[-1])
         plt.figure()
         plt.axhline(0.95, ls=":", c="black", label="State of the Art")
         if self.y_pred is not None:

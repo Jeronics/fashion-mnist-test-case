@@ -28,6 +28,11 @@ class GridSearchCV:
         self.name = name
         self.transformation = transformation
 
+        # Initialized parameters that will be used further on
+        self.best_params_ = None
+        self.best_model_score_ = None
+        self.best_model_score_train = None
+
     def fit(self, dataset):
         list_params = self.get_parameter_combination(self.parameter_grid)
         param_valid_scores = []
