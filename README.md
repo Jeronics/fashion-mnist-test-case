@@ -10,8 +10,9 @@ This program runs on python 3.7. To install all dependencies, run the following 
 
 ## 1. Training and Hyperparameter tuning 
 
-To train or tune a model. Run the ```hyperparameter_optimization``` script.
-Before you do so, apply the following changes:
+To train or tune a model, run the ```hyperparameter_optimization``` script.
+Before you do so, tweak the following variables in the script:
+
 ```
 ## Variables to change
 # Where you wish the model to be stored in the artifacts folder.
@@ -33,6 +34,7 @@ and run:
 ```python -m scripts.hyperparameter_optimization```
 
 This script will save the model as a pickle in the artifacts folder.
+
 ## 2. Evaluation
 
 Once the model has been trained, The ```evaluate_model.py``` script will be used to extract results of the classifier such as plots and metrics.
