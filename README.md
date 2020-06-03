@@ -2,7 +2,7 @@
 
 ## 0. Setup
 
-To install all dependencies, run in the console:
+To install all dependencies, run the following in the console inside the directory of the project:
 
 ```pip install -r requirements.txt```
 
