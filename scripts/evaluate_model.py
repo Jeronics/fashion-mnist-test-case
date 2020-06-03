@@ -1,3 +1,5 @@
+############################# IMPORTS #############################
+
 import pickle
 import os.path as path
 
@@ -6,6 +8,8 @@ import torchvision.transforms as transforms
 from utils.config import ARTIFACTS_DIR, DATA_DIR, MEAN_PIXEL, STD_PIXEL
 from utils.data_loaders import CustomFashionMNIST
 from utils.model_evaluation import ModelEvaluator
+
+###################################################################
 
 if __name__ == '__main__':
     # Variable to change.

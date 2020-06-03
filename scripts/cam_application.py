@@ -1,9 +1,13 @@
+############################# IMPORTS #############################
+
 import cv2
 import torch
 import torchvision.transforms as transforms
 
 from utils.application_utils import load_models, get_label_and_bounding_box
 from utils.config import MEAN_PIXEL, STD_PIXEL, LIST_CLASS
+
+###################################################################
 
 if __name__ == '__main__':
     cv2.namedWindow("Classification App")

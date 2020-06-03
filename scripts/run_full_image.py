@@ -1,18 +1,17 @@
+############################# IMPORTS #############################
+
 import os.path as path
 import pickle
-from pathlib import Path
 
-import cv2
-import matplotlib.pyplot as plt
 import numpy as np
 import torch
 import torchvision.transforms as transforms
-from PIL import Image
 
 from models.networks import ProductionCNN2
-from utils.config import DATA_DIR, MEAN_PIXEL, STD_PIXEL, LIST_CLASS, ARTIFACTS_DIR
-from utils.data_loaders import CustomFashionMNIST
 from utils.application_utils import get_label_and_bounding_box, create_image
+from utils.config import MEAN_PIXEL, STD_PIXEL, ARTIFACTS_DIR
+
+###################################################################
 
 
 if __name__ == "__main__":

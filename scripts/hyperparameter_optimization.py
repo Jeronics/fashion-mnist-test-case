@@ -1,3 +1,5 @@
+############################# IMPORTS #############################
+
 import torch
 import torchvision.transforms as transforms
 
@@ -7,6 +9,9 @@ from utils.config import MEAN_PIXEL, STD_PIXEL, DATA_DIR
 from utils.data_loaders import CustomFashionMNIST
 from utils.model_evaluation import ModelEvaluator
 from utils.model_selection import GridSearchCV
+
+###################################################################
+
 
 if __name__ == '__main__':
     ## Variables to change
