@@ -1,5 +1,6 @@
-import os.path as path
+############################# IMPORTS #############################
 
+import os.path as path
 import pickle
 from pathlib import Path
 
@@ -10,11 +11,18 @@ import torchvision.transforms as transforms
 from PIL import Image
 
 from models.networks import ProductionCNN, ProductionCNN2
-from utils.config import ARTIFACTS_DIR, DATA_DIR, LIST_CLASS, MEAN_PIXEL, STD_PIXEL
+from utils.config import ARTIFACTS_DIR, DATA_DIR
 from utils.data_loaders import CustomFashionMNIST
+
+###################################################################
 
 
 def create_image(image_name):
+    '''
+    Creates an image by joining various
+    :param image_name: The name where the image will be saved
+    :return: a large combined image.
+    '''
     chosen_class = 2
     # Read ImageNet class id to name mapping
     null_transformation = transforms.Compose([
@@ -53,6 +61,12 @@ def create_image(image_name):
 
 
 def get_maximum_class(prediction_values, predicted_classes):
+    '''
+    Get class with the highest predicted value.
+    :param prediction_values: List of predicted values
+    :param predicted_classes: List of predicted classes
+    :return: The predicted class.
+    '''
     row_max, row_idx = torch.max(prediction_values, dim=1)
     col_max, col_idx = torch.max(row_max, dim=1)
     predicted_class = predicted_classes[0, row_idx[0, col_idx], col_idx]
@@ -60,6 +74,12 @@ def get_maximum_class(prediction_values, predicted_classes):
 
 
 def get_most_voted_class(prediction_values, predicted_classes):
+    '''
+    Get most voted class with high predicted values
+    :param prediction_values: List of prediction values
+    :param predicted_classes: List of predicted classes
+    :return: predicted class
+    '''
     # Apply voting to each class
     classes, counts = np.unique(predicted_classes[prediction_values > np.percentile(prediction_values, 90)],
                                 return_counts=True)
@@ -70,7 +90,14 @@ def get_most_voted_class(prediction_values, predicted_classes):
 
 
 def get_label_and_bounding_box(model, image, voting=True, display=False):
-
+    '''
+    Returns the predicted label and bounding box.
+    :param model: a nn.Model which accepts images of any size (at least larger than 28x28)
+    :param image: a 28x28 grayscale image or larger.
+    :param voting: whether to use the voting method to determine the predicted class or the maximum method.
+    :param display: whether to display the image.
+    :return: the predicted class and the bounding box.
+    '''
     predictions = model(image)
     predictions = torch.softmax(predictions, dim=1)
 
@@ -83,7 +110,6 @@ def get_label_and_bounding_box(model, image, voting=True, display=False):
     else:
         # Get class with the maximum value
         predicted_class = get_maximum_class(get_maximum_class(prediction_values, predicted_classes))
-
 
     # Find the n x m score map for the predicted class
     score_map = predictions[0, predicted_class, :, :].cpu().numpy()
@@ -108,6 +134,11 @@ def get_label_and_bounding_box(model, image, voting=True, display=False):
 
 
 def load_models(load=-1):
+    '''
+    Loads one or various models
+    :param load: a variable indicatin which model to load (1, 2, 3) or all (-1)
+    :return: a list of models
+    '''
     models = []
     # loading
     if load == 1 or load == -1:

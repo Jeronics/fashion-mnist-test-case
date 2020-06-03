@@ -1,9 +1,7 @@
 ############################# IMPORTS #############################
 
 from PIL import Image
-
 from torchvision.datasets import FashionMNIST
-
 
 ###################################################################
 

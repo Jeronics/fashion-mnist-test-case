@@ -1,15 +1,20 @@
+############################# IMPORTS #############################
+
 import os
+import time
 from os import path
 from pathlib import Path
-import time
 
 import matplotlib.pyplot as plt
 import numpy as np
-import torch
-from sklearn.metrics import accuracy_score, confusion_matrix, plot_confusion_matrix
 import seaborn as sn
+import torch
+from sklearn.metrics import accuracy_score, confusion_matrix
 
 from utils.config import RESULTS_DIR, ARTIFACTS_DIR, LIST_CLASS
+
+
+###################################################################
 
 
 class ModelEvaluator:
@@ -38,7 +43,7 @@ class ModelEvaluator:
             self.y_real = testset.targets
         start_time = time.time()
         self.y_pred = self.model.predict(testset)
-        self.duration = (time.time() - start_time)/len(testset)
+        self.duration = (time.time() - start_time) / len(testset)
 
     def get_accuracy(self):
         '''
@@ -70,9 +75,9 @@ class ModelEvaluator:
         plt.xlabel("Predicted Label")
         plt.ylabel("True Label")
         plt.title("Confusion matrix")
-        plt.tick_params(axis='both', labelsize=0, length = 0)
+        plt.tick_params(axis='both', labelsize=0, length=0)
         plt.xticks(range(len(LIST_CLASS)), list(LIST_CLASS), size='small')
-        plt.yticks(np.array(range(len(LIST_CLASS)))+0.5, list(LIST_CLASS), size='small')
+        plt.yticks(np.array(range(len(LIST_CLASS))) + 0.5, list(LIST_CLASS), size='small')
         plt.xticks(rotation=45)
         plt.yticks(rotation=0)
         plt.tight_layout()

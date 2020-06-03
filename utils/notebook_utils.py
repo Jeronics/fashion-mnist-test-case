@@ -1,7 +1,10 @@
+############################# IMPORTS #############################
+
 import numpy as np
 import matplotlib.pyplot as plt
 from utils.config import LIST_CLASS
 
+###################################################################
 
 def visualize_dataset_sample(dataset):
     '''
