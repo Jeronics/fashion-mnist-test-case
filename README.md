@@ -1,8 +1,9 @@
-# advertima-test-case
+# Advertima test case
+FashionMNIST classification and object detection.
 
 ## 0. Setup
 
-To install all dependencies, run the following in the console inside the directory of the project:
+This program runs on python 3.7. To install all dependencies, run the following in the console inside the directory of the project:
 
 ```pip install -r requirements.txt```
 
@@ -29,7 +30,7 @@ params_options = {
 
 and run:
 
-```python -m scripts.hyperparameter_optimization.py```
+```python -m scripts.hyperparameter_optimization```
 
 This script will save the model as a pickle in the artifacts folder.
 ## 2. Evaluation
@@ -38,15 +39,14 @@ Once the model has been trained, The ```evaluate_model.py``` script will be used
 
 In order to run, change the model_name to fit with one of the existing pkl. file names
 
-```python -m scripts.evaluate_model.py```
+```python -m scripts.evaluate_model```
 
 ## 3. Application
 
 Run the application consists in applying the previous object detection to a live feed. To do this, I used openCV's library to capture the images. Unfortunately, this part was not completely finished because of the lack of time.
 To run the code:
-```
-python -m scripts.cam_application
-```
+
+```python -m scripts.cam_application```
 
 Once running,
 - Press Esc to stop the application.
