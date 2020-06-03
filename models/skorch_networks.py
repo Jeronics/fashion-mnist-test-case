@@ -1,3 +1,5 @@
+############################# IMPORTS #############################
+
 from copy import copy
 
 import torch
@@ -9,7 +11,13 @@ from torchvision.transforms import Compose, ToTensor, Normalize
 from utils.config import MEAN_PIXEL, STD_PIXEL
 
 
+###################################################################
+
+
 class CustomNeuralNetClassifier(NeuralNetClassifier):
+    '''
+    Custom skorch NeuralNetClassifier to allow for dataloaders with different transformations for the train and validation sets.
+    '''
 
     def __init__(
             self,

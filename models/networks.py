@@ -1,11 +1,15 @@
+############################# IMPORTS #############################
+
 import torch.nn as nn
 import torch.nn.functional as F
 
+###################################################################
 
 class CNN(nn.Module):
     '''
     Convolutional neural network for a 28x28 grayscale image.
     '''
+
     def __init__(self):
         super(CNN, self).__init__()
         self.conv1 = nn.Conv2d(1, 8, 3, stride=1)
@@ -60,6 +64,7 @@ class CNN2(nn.Module):
     '''
     Convolutional neural network for 28x28 grayscale image.
     '''
+
     def __init__(self):
         super(CNN2, self).__init__()
         self.conv1 = nn.Conv2d(1, 16, 3, stride=1, padding=1)
