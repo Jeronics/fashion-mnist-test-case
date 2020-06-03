@@ -85,7 +85,7 @@ class ModelEvaluator:
         '''
         Plots the training and validation accuracies of the model at every epoch iteration.
         :param figname: Name where you want the plot saved.
-        :param show: Boolean of whether to show the image 
+        :param show: Boolean of whether to show the image
         :return:
         '''
         train_acc = self.model.history[:, 'train_acc'][1:]

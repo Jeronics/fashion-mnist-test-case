@@ -15,11 +15,11 @@ from utils.model_selection import GridSearchCV
 if __name__ == '__main__':
     ## Variables to change
     # Where you wish the model to be stored in the artifacts folder.
-    model_name = "cnn_1_500"
+    model_name = "cnn_3_500_b"
     # Data augmentation on the training dataset or not.
-    data_augmentation = False
+    data_augmentation = True
     # CNN or CNN2 networks.
-    Network = CNN
+    Network = CNN2
     # Apply hyperparameter search or just train.
     hyperparameter_search = False
     # Dictionary with list of values per hyperparameter for grid search.
@@ -69,6 +69,7 @@ if __name__ == '__main__':
                                     max_epochs=500,
                                     lr=0.001,
                                     criterion=torch.nn.CrossEntropyLoss,
+                                    optimizer__weight_decay=0.01,
                                     # Shuffle training data on each epoch
                                     iterator_train__shuffle=False,
                                     valid_transform=default_transformation,

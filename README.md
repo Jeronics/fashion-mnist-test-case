@@ -18,11 +18,11 @@ hyperparameter_search = False
 params_options = {   
     'lr': [0.001],
 }
-``
+```
 
 and run:
 
-```python -m scripts.hyperparameter_optimization.py````
+```python -m scripts.hyperparameter_optimization.py```
 
 This script will save the model as a pickle in the artifacts folder.
 ## 2. Evaluation
@@ -31,6 +31,17 @@ Once the model has been trained, The ```evaluate_model.py``` script will be used
 
 In order to run, change the model_name to fit with one of the existing pkl. file names
 
-```python -m scripts.evaluate_model.py````
+```python -m scripts.evaluate_model.py```
 
-3. 
+3. Application
+
+Run the application consists in applying the previous object detection to a live feed. To do this, I used openCV's library to capture the images. Unfortunately, this part was not completely finished because of the lack of time.
+To run the code:
+```
+python -m scripts.cam_application
+```
+
+Once running,
+- Press Esc to stop the application.
+- Press 1 to change the model.
+
