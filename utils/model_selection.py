@@ -1,18 +1,18 @@
 import itertools
 import pickle
 from copy import copy
+from os import path
 
 import numpy as np
 import torch
-from sklearn.model_selection import train_test_split
-from sklearn.metrics import accuracy_score
 from skorch.callbacks import BatchScoring
 from skorch.callbacks import Callback
 from skorch.dataset import CVSplit
 from torch.utils.data import Subset
+
 from utils.config import ARTIFACTS_DIR
-from os import path
 from utils.model_evaluation import ModelEvaluator
+
 
 class GridSearchCV:
     '''
@@ -20,6 +20,15 @@ class GridSearchCV:
     '''
 
     def __init__(self, model, parameter_grid, cv=3, refit=True, name="my_model", transformation=None):
+        '''
+        Initialize a grid search object.
+        :param model: a CustomNeuralNetClassifier instance.
+        :param parameter_grid: a dictionary of parameters with a list of values you wish to tune.
+        :param cv: the number of splits per cross validation
+        :param refit: whether to fit the best model once the parameters have been chosen.
+        :param name: name of the CustomNeuralNetClassifier model
+        :param transformation:
+        '''
         self.model = model
         self.parameter_grid = parameter_grid
         self.refit = refit
@@ -141,12 +150,11 @@ class WeightTracker(Callback):
         super(Callback, self).__init__()
 
     def on_epoch_begin(self, net, dataset_train=None, dataset_valid=None, **kwargs):
-        print("epoch begin",id(dataset_train), id(dataset_valid))
+        print("epoch begin", id(dataset_train), id(dataset_valid))
 
     def on_epoch_end(self, net, dataset_train=None, dataset_valid=None, **kwargs):
-        print("epoch begin",id(dataset_train),id(dataset_valid))
+        print("epoch begin", id(dataset_train), id(dataset_valid))
 
     def on_grad_computed(self, net, named_parameters,
                          X=None, y=None, training=None, **kwargs):
         print(torch.norm(net.module_.conv1.weight.grad).data.item())
-

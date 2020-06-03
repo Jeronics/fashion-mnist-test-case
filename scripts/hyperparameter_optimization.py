@@ -1,11 +1,7 @@
 import torch
 import torchvision.transforms as transforms
-from skorch.helper import predefined_split
-from torch.utils.data import random_split
 
-import sys
-from models.networks import CNN2, CNN
-import torchvision.transforms as transforms
+from models.networks import CNN2
 from models.skorch_networks import CustomNeuralNetClassifier
 from utils.config import MEAN_PIXEL, STD_PIXEL, DATA_DIR
 from utils.data_loaders import CustomFashionMNIST
@@ -15,13 +11,13 @@ from utils.model_selection import GridSearchCV
 if __name__ == '__main__':
     ## Variables to change
     # Where you wish the model to be stored in the artifacts folder.
-    model_name = "cnn_3_500_b"
+    model_name = "cnn_name"
     # Data augmentation on the training dataset or not.
     data_augmentation = True
     # CNN or CNN2 networks.
     Network = CNN2
     # Apply hyperparameter search or just train.
-    hyperparameter_search = False
+    hyperparameter_search = True
     # Dictionary with list of values per hyperparameter for grid search.
     params_options = {
         'lr': [0.001],
@@ -64,9 +60,8 @@ if __name__ == '__main__':
     trainset = CustomFashionMNIST(DATA_DIR, download=True, train=True, transform=transformations['train'])
     testset = CustomFashionMNIST(DATA_DIR, download=True, train=False, transform=transformations['default'])
 
-
     net = CustomNeuralNetClassifier(Network,
-                                    max_epochs=500,
+                                    max_epochs=1,
                                     lr=0.001,
                                     criterion=torch.nn.CrossEntropyLoss,
                                     optimizer__weight_decay=0.01,
