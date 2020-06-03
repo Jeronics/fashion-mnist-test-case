@@ -1,5 +1,5 @@
 # FashionMNIST test case
-FashionMNIST classification and object detection.
+This project consists in creating different classification approaches for the FashionMNIST dataset and then applying them to object detection for a webcam application.
 
 ## 0. Setup
 
