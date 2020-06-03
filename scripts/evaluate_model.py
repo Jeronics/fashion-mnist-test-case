@@ -1,5 +1,5 @@
 import pickle
-from os import path
+import os.path as path
 
 import torchvision.transforms as transforms
 
@@ -16,7 +16,8 @@ if __name__ == '__main__':
 
     # Define the transformations applied to the training data
     transform = transforms.Compose(
-        [transforms.ToTensor(), transforms.Normalize((MEAN_PIXEL,), (STD_PIXEL,))]
+        [transforms.ToTensor(),
+         transforms.Normalize((MEAN_PIXEL,), (STD_PIXEL,))]
     )
 
     testset = CustomFashionMNIST(DATA_DIR, download=True, train=False, transform=transform)
@@ -26,5 +27,3 @@ if __name__ == '__main__':
     print(modelEvaluator.get_accuracy())
     print(modelEvaluator.get_confusion_matrix())
     modelEvaluator.save_results(model_name)
-    # print(cvGridSearch.best_params_)
-    # print(cvGridSearch.best_model.module_)

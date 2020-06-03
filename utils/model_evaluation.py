@@ -13,14 +13,25 @@ from utils.config import RESULTS_DIR, ARTIFACTS_DIR, LIST_CLASS
 
 
 class ModelEvaluator:
+    '''
+    Model used for evaluating a classifier.
+    '''
 
     def __init__(self, model):
+        '''
+        Initializes the model.
+        :param model: A CustomNeuralNetClassifier object.
+        '''
         self.model = model
         self.y_real = None
         self.y_pred = None
         self.duration = None
 
     def fit(self, testset):
+        '''
+        Fits model on a dataset.
+        :param testset:  pytorch Dataset or pytorch Subset.
+        '''
         if isinstance(testset, torch.utils.data.Subset):
             self.y_real = testset.dataset.targets[testset.indices]
         else:
@@ -28,19 +39,32 @@ class ModelEvaluator:
         start_time = time.time()
         self.y_pred = self.model.predict(testset)
         self.duration = (time.time() - start_time)/len(testset)
-        print("time", self.duration)
 
     def get_accuracy(self):
+        '''
+        Returns the accuracy of the model on the fit dataset.
+        :return: the accuracy as a float.
+        '''
         if self.y_pred is not None:
             return accuracy_score(self.y_real, self.y_pred)
         return None
 
     def get_confusion_matrix(self):
+        '''
+        Returns the classification confusion matrix of the model on the fit dataset.
+        :return: a confusion matrix in a numpy matrix
+        '''
         if self.y_pred is not None:
             return confusion_matrix(self.y_real, self.y_pred).astype(int)
         return None
 
     def display_confusion_matrix(self, save_plot=None, show=True):
+        '''
+        Displays and/or saves the resulting confusion matrix.
+        :param save_plot:
+        :param show:
+        :return:
+        '''
         plt.figure()
         sn.heatmap(self.get_confusion_matrix(), annot=True, fmt='g')
         plt.xlabel("Predicted Label")
@@ -58,9 +82,14 @@ class ModelEvaluator:
             plt.show()
 
     def show_training_accuracy_epoch(self, figname=None, show=True):
+        '''
+        Plots the training and validation accuracies of the model at every epoch iteration.
+        :param figname: Name where you want the plot saved.
+        :param show: Boolean of whether to show the image 
+        :return:
+        '''
         train_acc = self.model.history[:, 'train_acc'][1:]
         valid_acc = self.model.history[:, 'valid_acc'][:-1]
-        print("accuracies",train_acc[-1],valid_acc[-1])
         plt.figure()
         plt.axhline(0.95, ls=":", c="black", label="State of the Art")
         if self.y_pred is not None:
@@ -79,13 +108,17 @@ class ModelEvaluator:
             plt.savefig(figname)
 
     def show_training_loss_epoch(self, figname=None, show=True):
+        '''
+        Plots the training and validation accuracies of the model at every epoch iteration.
+        :param figname: Name where you want the plot saved.
+        :param show: Boolean of whether to show the image
+        :return:
+        '''
         train_loss = self.model.history[:-1, 'train_loss'][1:]
         valid_loss = self.model.history[:, 'valid_loss'][:-1]
         plt.figure()
         plt.plot(range(1, len(train_loss) + 1), train_loss, 'b', label='Training Loss')
         plt.plot(range(1, len(valid_loss) + 1), valid_loss, 'r', label='Validation Loss')
-        # plt.ylim([0.0, 1.0])
-        # plt.yticks(np.arange(0.0, 1.0, 0.05))
         plt.legend()
         plt.xlabel('Epoch')
         plt.ylabel('Loss')
@@ -96,9 +129,13 @@ class ModelEvaluator:
             plt.savefig(figname)
 
     def save_results(self, name):
+        '''
+        Saves the model and the results in the results folder.
+        :param name:
+        :return:
+        '''
         save_dir = path.join(RESULTS_DIR, name)
         Path(save_dir).mkdir(parents=True, exist_ok=True)
-        print(path.exists(save_dir))
         if self.y_pred is not None:
             if self.model is not None:
                 self.show_training_accuracy_epoch(figname=os.path.join(save_dir, "accuracy_epoch.png"), show=False)
